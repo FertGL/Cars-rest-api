@@ -49,8 +49,7 @@ public class Car {
         return "brand='" + brand + '\'' +
                 ", year=" + year +
                 ", color='" + color + '\'' +
-                ", price=" + price +
-                '}';
+                ", price=" + price;
     }
 }
 
