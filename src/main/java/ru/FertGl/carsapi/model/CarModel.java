@@ -3,12 +3,15 @@ package ru.FertGl.carsapi.model;
 import ru.FertGl.carsapi.Car;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class CarModel {
     private static final String PATH = "jdbc:mysql://127.0.0.1:3306/Car";
     private static final String USER_NAME = "root";
     private static final String PASS = "Gleb01012003";
+
 
     public Car add(Car car) {
         try (Connection connection = DriverManager.getConnection(PATH, USER_NAME, PASS)) {
@@ -152,6 +155,172 @@ public class CarModel {
         } catch (Exception e) {
             e.printStackTrace();
             return false;
+        }
+    }
+
+    public List<Car> filter(String brand, String color) {
+        try (Connection connection = DriverManager.getConnection(PATH, USER_NAME, PASS)) {
+            Statement statement = connection.createStatement();
+            List<Car> cars = new ArrayList<>();
+
+            String sqlQuery = """
+                    
+                    SELECT * FROM Car
+                    WHERE brand = ? AND color = ?;
+                    
+                    """;
+
+            try (PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery)) {
+                preparedStatement.setString(1, brand);
+                preparedStatement.setString(2, color);
+                ResultSet resultSet = preparedStatement.executeQuery();
+
+                while (resultSet.next()) {
+                    cars.add(new Car(resultSet.getString(2),
+                            resultSet.getInt(3), resultSet.getString(4),
+                            resultSet.getInt(5)));
+                }
+            }
+            return cars;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
+
+    public List<Car> filterBrand(String brand) {
+        try (Connection connection = DriverManager.getConnection(PATH, USER_NAME, PASS)) {
+            Statement statement = connection.createStatement();
+            List<Car> cars = new ArrayList<>();
+
+            String sqlQuery = """
+                    
+                    SELECT * FROM Car
+                    WHERE brand = ?;
+                    
+                    """;
+
+            try (PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery)) {
+                preparedStatement.setString(1, brand);
+                ResultSet resultSet = preparedStatement.executeQuery();
+
+                while (resultSet.next()) {
+                    cars.add(new Car(resultSet.getString(2),
+                            resultSet.getInt(3), resultSet.getString(4),
+                            resultSet.getInt(5)));
+                }
+            }
+            return cars;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
+
+    public List<Car> filterColor(String color) {
+        try (Connection connection = DriverManager.getConnection(PATH, USER_NAME, PASS)) {
+            Statement statement = connection.createStatement();
+            List<Car> cars = new ArrayList<>();
+
+            String sqlQuery = """
+                    
+                    SELECT * FROM Car
+                    WHERE color = ?;
+                    
+                    """;
+
+            try (PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery)) {
+                preparedStatement.setString(1, color);
+                ResultSet resultSet = preparedStatement.executeQuery();
+
+                while (resultSet.next()) {
+                    cars.add(new Car(resultSet.getString(2),
+                            resultSet.getInt(3), resultSet.getString(4),
+                            resultSet.getInt(5)));
+                }
+            }
+            return cars;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
+
+    public static List<Car> sort(String by, String order) {
+        try (Connection connection = DriverManager.getConnection(PATH, USER_NAME, PASS)) {
+            Statement statement = connection.createStatement();
+            List<Car> cars = new ArrayList<>();;
+
+
+            if (order.equalsIgnoreCase("ASC") & by.equalsIgnoreCase("price")) {
+
+                String sqlQuery = """
+                        
+                        SELECT * FROM Car
+                        ORDER BY Price ASC;
+                        
+                        """;
+
+
+                ResultSet resultSet = statement.executeQuery(sqlQuery);
+
+                while (resultSet.next()) {
+                    cars.add(new Car(resultSet.getString(2),
+                            resultSet.getInt(3), resultSet.getString(4),
+                            resultSet.getInt(5)));
+                }
+
+            } else if (order.equalsIgnoreCase("DESC") & by.equalsIgnoreCase("price")) {
+                String sqlQuery = """
+                        
+                        SELECT * FROM Car
+                        ORDER BY Price DESC;
+                        
+                        """;
+
+                ResultSet resultSet = statement.executeQuery(sqlQuery);
+
+                while (resultSet.next()) {
+                    cars.add(new Car(resultSet.getString(2),
+                            resultSet.getInt(3), resultSet.getString(4),
+                            resultSet.getInt(5)));
+                }
+
+            } else if (order.equalsIgnoreCase("ASC") & by.equalsIgnoreCase("year")) {
+                String sqlQuery = """
+                        
+                        SELECT * FROM Car
+                        ORDER BY Year ASC;
+                        
+                        """;
+
+                ResultSet resultSet = statement.executeQuery(sqlQuery);
+
+                while (resultSet.next()) {
+                    cars.add(new Car(resultSet.getString(2),
+                            resultSet.getInt(3), resultSet.getString(4),
+                            resultSet.getInt(5)));
+                }
+            } else if (order.equalsIgnoreCase("DESC") & by.equalsIgnoreCase("year")) {
+                String sqlQuery = """
+                        
+                        SELECT * FROM Car
+                        ORDER BY Year DESC;
+                        
+                        """;
+
+                ResultSet resultSet = statement.executeQuery(sqlQuery);
+
+                while (resultSet.next()) {
+                    cars.add(new Car(resultSet.getString(2),
+                            resultSet.getInt(3), resultSet.getString(4),
+                            resultSet.getInt(5)));
+                }
+            }
+            return cars;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ArrayList<>();
         }
     }
 }
