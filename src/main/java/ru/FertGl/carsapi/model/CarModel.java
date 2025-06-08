@@ -4,7 +4,6 @@ import ru.FertGl.carsapi.Car;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class CarModel {
@@ -115,19 +114,23 @@ public class CarModel {
         try (Connection connection = DriverManager.getConnection(PATH, USER_NAME, PASS)) {
             Statement statement = connection.createStatement();
 
-            String sqlQuery = """
-                    
-                    UPDATE Car
-                    SET Color = ?
-                    WHERE id = ?;
-                    
-                    """;
+            if (!newColor.isEmpty()) {
+                String sqlQuery = """
+                        
+                        UPDATE Car
+                        SET Color = ?
+                        WHERE id = ?;
+                        
+                        """;
 
-            try (PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery)) {
-                preparedStatement.setString(1, newColor);
-                preparedStatement.setInt(2, id);
-                preparedStatement.executeUpdate();
-                return true;
+                try (PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery)) {
+                    preparedStatement.setString(1, newColor);
+                    preparedStatement.setInt(2, id);
+                    preparedStatement.executeUpdate();
+                    return true;
+                }
+            } else {
+                return false;
             }
 
         } catch (Exception e) {
@@ -249,7 +252,8 @@ public class CarModel {
     public List<Car> sort(String by, String order) {
         try (Connection connection = DriverManager.getConnection(PATH, USER_NAME, PASS)) {
             Statement statement = connection.createStatement();
-            List<Car> cars = new ArrayList<>();;
+            List<Car> cars = new ArrayList<>();
+            ;
 
 
             if (order.equalsIgnoreCase("ASC") & by.equalsIgnoreCase("price")) {
@@ -316,6 +320,8 @@ public class CarModel {
                             resultSet.getInt(3), resultSet.getString(4),
                             resultSet.getInt(5)));
                 }
+            } else {
+                return new ArrayList<>();
             }
             return cars;
         } catch (Exception e) {
