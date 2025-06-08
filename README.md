@@ -1,1 +1,1 @@
-🌱 Spring RESTful API with MySQL
+🌱 Spring Web RESTful API with MySQL and logs
