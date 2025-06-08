@@ -39,17 +39,17 @@ public class CarModel {
         return car;
     }
 
-    public HashMap<Integer, Car> get() {
+    public List<Car> get() {
         try {
             Connection connection = DriverManager.getConnection(PATH, USER_NAME, PASS);
             Statement statement = connection.createStatement();
 
             String sqlQuery = "SELECT * FROM Car";
-            HashMap<Integer, Car> cars = new HashMap<>();
+            List<Car> cars = new ArrayList<>();
 
             ResultSet resultSet = statement.executeQuery(sqlQuery);
             while (resultSet.next()) {
-                cars.put(resultSet.getInt(1), new Car(resultSet.getString(2),
+                cars.add(new Car(resultSet.getString(2),
                         resultSet.getInt(3), resultSet.getString(4),
                         resultSet.getInt(5)));
             }
@@ -246,7 +246,7 @@ public class CarModel {
         }
     }
 
-    public static List<Car> sort(String by, String order) {
+    public List<Car> sort(String by, String order) {
         try (Connection connection = DriverManager.getConnection(PATH, USER_NAME, PASS)) {
             Statement statement = connection.createStatement();
             List<Car> cars = new ArrayList<>();;
